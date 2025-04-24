@@ -39,6 +39,20 @@
             font-weight: bold;
             margin-top: 1rem;
         }
+        .fullscreen-button {
+            display: none;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #1e3a8a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .fullscreen-button:hover {
+            background-color: #3b82f6;
+        }
         .youtube-audio {
             display: none; /* Hide the iframe visually */
         }
@@ -64,6 +78,7 @@
         <p class="success-message" id="successMessage">
             Verification Successful!
         </p>
+        <button class="fullscreen-button" id="fullscreenButton">Enter Full-Screen</button>
         <div id="youtubeContainer"></div>
     </div>
     <script>
@@ -71,35 +86,41 @@
         const randomPercent = Math.floor(Math.random() * (100 - 70 + 1)) + 70;
         document.getElementById('volumePercent').textContent = randomPercent;
 
-        // After 10 seconds, show success message, embed YouTube video, and enter full-screen
+        // After 10 seconds, show success message, embed YouTube video, and show full-screen button
         setTimeout(() => {
             const successMessage = document.getElementById('successMessage');
+            const fullscreenButton = document.getElementById('fullscreenButton');
             const youtubeContainer = document.getElementById('youtubeContainer');
             successMessage.style.display = 'block';
+            fullscreenButton.style.display = 'block';
 
             // Embed YouTube video with autoplay
             const iframe = document.createElement('iframe');
             iframe.className = 'youtube-audio';
-            iframe.src = 'https://www.youtube.com/watch?v=3BV-b6P61TQ?autoplay=1&controls=0';
-            iframe.allow = 'autoplay; encrypted-media';
+            iframe.src = 'https://www.youtube.com/embed/3BV-b6P61TQ?autoplay=1&controls=0';
+            iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
             iframe.frameborder = '0';
+            iframe.referrerpolicy = 'strict-origin-when-cross-origin';
+            iframe.allowFullscreen = true;
             youtubeContainer.appendChild(iframe);
 
-            // Request full-screen mode
-            const elem = document.documentElement;
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen().catch(error => {
-                    console.error('Full-screen request failed:', error);
-                });
-            } else if (elem.webkitRequestFullscreen) {
-                elem.webkitRequestFullscreen().catch(error => {
-                    console.error('Full-screen request failed:', error);
-                });
-            } else if (elem.msRequestFullscreen) {
-                elem.msRequestFullscreen().catch(error => {
-                    console.error('Full-screen request failed:', error);
-                });
-            }
+            // Add event listener for full-screen button
+            fullscreenButton.addEventListener('click', () => {
+                const elem = document.documentElement;
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen().catch(error => {
+                        console.error('Full-screen request failed:', error);
+                    });
+                } else if (elem.webkitRequestFullscreen) {
+                    elem.webkitRequestFullscreen().catch(error => {
+                        console.error('Full-screen request failed:', error);
+                    });
+                } else if (elem.msRequestFullscreen) {
+                    elem.msRequestFullscreen().catch(error => {
+                        console.error('Full-screen request failed:', error);
+                    });
+                }
+            });
         }, 10000);
     </script>
 </body>
