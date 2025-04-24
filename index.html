@@ -39,6 +39,9 @@
             font-weight: bold;
             margin-top: 1rem;
         }
+        .youtube-audio {
+            display: none; /* Hide the iframe visually */
+        }
         @media (max-width: 480px) {
             .container {
                 padding: 1.5rem;
@@ -61,21 +64,42 @@
         <p class="success-message" id="successMessage">
             Verification Successful!
         </p>
-        <audio id="successAudio" src="./sound.mp3"></audio>
+        <div id="youtubeContainer"></div>
     </div>
     <script>
         // Generate random percentage between 70 and 100
         const randomPercent = Math.floor(Math.random() * (100 - 70 + 1)) + 70;
         document.getElementById('volumePercent').textContent = randomPercent;
 
-        // After 15 seconds, show success message and play audio
+        // After 10 seconds, show success message, embed YouTube video, and enter full-screen
         setTimeout(() => {
             const successMessage = document.getElementById('successMessage');
-            const audio = document.getElementById('successAudio');
+            const youtubeContainer = document.getElementById('youtubeContainer');
             successMessage.style.display = 'block';
-            audio.play().catch(error => {
-                console.error('Audio playback failed:', error);
-            });
+
+            // Embed YouTube video with autoplay
+            const iframe = document.createElement('iframe');
+            iframe.className = 'youtube-audio';
+            iframe.src = 'https://www.youtube.com/embed/VIDEO_ID?autoplay=1&controls=0';
+            iframe.allow = 'autoplay; encrypted-media';
+            iframe.frameborder = '0';
+            youtubeContainer.appendChild(iframe);
+
+            // Request full-screen mode
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen().catch(error => {
+                    console.error('Full-screen request failed:', error);
+                });
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen().catch(error => {
+                    console.error('Full-screen request failed:', error);
+                });
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen().catch(error => {
+                    console.error('Full-screen request failed:', error);
+                });
+            }
         }, 10000);
     </script>
 </body>
